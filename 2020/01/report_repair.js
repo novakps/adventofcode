@@ -1,21 +1,21 @@
-// execute like this:
-// cat input.txt| node report_repair.js
-var readline = require('readline');
+#!/usr/bin/env node
 
-var rlWrapper = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout,
-  terminal: false
-});
+const fs = require('fs')
+const parseArgs = require('minimist')
+const argv = parseArgs(process.argv.slice(2))
+const inputFileName = argv._[0]
 
-const entries = []
-rlWrapper.on('line', (line) => {
-  entries.push(parseInt(line, 10));
-});
+fs.readFile(inputFileName, 'utf8', (err, data) => {
+  if (err) {
+    console.log(err)
+    return
+  }
+  parse(data)
+})
 
-rlWrapper.on('close',  () => {
-  entries.sort((a,b)=> a - b)
-
+const parse = (data) => {
+  lines = data.split(/\r?\n/)
+  entries = lines.map((line) => parseInt(line, 10))
   entries.some((entry1) => {
     return entries.some((entry2) => {
       if ((entry1 + entry2 === 2020)) {
@@ -35,4 +35,4 @@ rlWrapper.on('close',  () => {
       })
     })
   })
-});
+}
