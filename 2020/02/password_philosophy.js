@@ -19,7 +19,7 @@ const parse = (data) => {
 }
 
 const countValidPart1 = (data) => {
-  lines = data.split(/\r?\n/)
+  const lines = data.split(/\r?\n/)
   validPasswords = lines.filter((line) => {
     const {a: min, b:max, character, password} = parseLine(line)
     if (!password) {
