@@ -1,15 +1,25 @@
 {
-  "name": "01",
-  "version": "1.0.0",
-  "description": "",
-  "main": "report_repair.js",
+  "license": "ISC",
+  "author": "",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build:live": "nodemon --watch 'src/**/*.ts' --exec \"ts-node\" src/index.ts day_5 src/day_5/test.txt",
+    "build": "tsc -p .",
+    "dev": "ts-node src/index.ts",
+    "start": "npm run build:live"
+  },
+  "devDependencies": {
+    "typescript": "^4.1.2",
+    "ts-node": "^9.1.0",
+    "nodemon": "^2.0.6",
+    "@types/node": "^14.14.10"
+  },
   "dependencies": {
+    "@types/minimist": "^1.2.1",
     "minimist": "^1.2.5"
   },
-  "devDependencies": {},
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "",
-  "license": "ISC"
+  "main": "index.ts",
+  "description": "",
+  "version": "0.0.0",
+  "name": "01"
 }
