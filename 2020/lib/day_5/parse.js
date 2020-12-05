@@ -14,14 +14,18 @@ var parse = function (inputFileName) {
         }
         return { pass: pass, row: row, column: column, seat_id: seat_id };
     });
-    console.log(seats);
+    //console.log(seats)
     console.log("Part 1 highest seat ID: " + highest_seat_id);
     var sorted_seat_ids = seats.map(function (seat) { return seat.seat_id; }).sort(function (a, b) { return a - b; });
     var my_seat_id = sorted_seat_ids.find(function (seat_id, index, seats) {
-        console.log(seat_id);
-        return (seat_id - 1) !== seats[index - 1] && (seat_id + 1) !== seats[index + 1];
+        if (index && seats[index - 1] !== seat_id - 1) {
+            console.log("Part 2 my seat ID: " + (seat_id - 1));
+            return true;
+        }
+        if (seats[index + 1] !== seat_id + 1) {
+            console.log("Part 2 my seat ID: " + (seat_id + 1));
+            return true;
+        }
     });
-    console.log(sorted_seat_ids);
-    console.log("Part 2 my seat ID: " + my_seat_id);
 };
 exports.default = parse;

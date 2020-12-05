@@ -3,16 +3,12 @@
 import minimist from 'minimist'
 
 const argv = minimist(process.argv.slice(2))
-const day = argv._[0]
-const inputFileName = argv._[1]
+const day = argv.day || argv.d
+const inputFileName = argv._[0]
 
-let parse
-switch (day) {
-case 'day_5':
-  parse = require('./day_5/parse').default
-  break
-default:
-  console.error(`${day} is not a valid day.`)
-  break
+try {
+  const parse = require('./' + day).default
+  parse(inputFileName)
+} catch (err) {
+  console.error(err)
 }
-parse(inputFileName)

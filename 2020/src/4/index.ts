@@ -1,17 +1,20 @@
+import { readFileSync } from 'fs'
+
 const REQUIRED_FIELDS = ['byr', 'iyr', 'eyr', 'hcl', 'hgt', 'ecl', 'pid']
 
-exports.parse = (data) => {
+const parse = (inputFileName: string) => {
+  const data = readFileSync(inputFileName).toString()
   const passports = data.split(/\n\n/).map((passport) => {
     const raw_fields = passport.split(/\s/)
     return raw_fields.reduce((accumulator, field) => {
       const [key, value] = field.split(':')
       accumulator[key] = value
       return accumulator
-    }, {})
+    }, <any> {})
   })
   const requiredFieldPassports = passports.filter((passport) => {
     return REQUIRED_FIELDS.every((field_name => {
-      return field_name in passport
+      return passport[field_name]
     }))
   })
   console.log('Part1 ', requiredFieldPassports.length)
@@ -39,7 +42,7 @@ const RE_HAIR_COLOR = /^#[0-9,a-f]{6}$/
 const RE_EYE_COLOR = /^(amb|blu|brn|gry|grn|hzl|oth)$/
 const RE_PASSPORT_ID = /^\d{9}$/
 
-const isValidPassport = (passport) => {
+const isValidPassport = (passport:any) => {
   //console.log(passport)
   const {byr, iyr, eyr, hcl, hgt, ecl, pid} = passport
   //console.log({pid})
@@ -74,7 +77,7 @@ const isValidPassport = (passport) => {
   return true
 }
 
-const validateYear = (text, min, max) => {
+const validateYear = (text: string, min: number, max: number) => {
   //console.log({text, min, max})
   if (RE_FOUR_DIGITS.test(text) === false) {
     return false
@@ -83,7 +86,7 @@ const validateYear = (text, min, max) => {
   return (value >= min && value <= max)
 }
 
-const validateHgt = (hgt) => {
+const validateHgt = (hgt: string) => {
   const match = hgt.match(RE_HEIGHT)
   if (!match) {
     return false
@@ -99,3 +102,5 @@ const validateHgt = (hgt) => {
   }
   return false
 }
+
+export default parse
