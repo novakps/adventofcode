@@ -25,11 +25,11 @@ const countValidPart2 = (data: string) => {
   const lines = data.split(/\r?\n/)
   const validPasswordsCount = lines.filter((line) => {
     const {a: pos1, b: pos2, character, password} = parseLine(line)
-    console.log({pos1, pos2, character, password, line})
+    //console.log({pos1, pos2, character, password, line})
     if (!password) {
       return false
     }
-    console.log(password[pos1 - 1], password[pos2 - 1])
+    //console.log(password[pos1 - 1], password[pos2 - 1])
     const firstMatches = password[pos1 - 1] === character
     const secondMatches = password[pos2 - 1] === character
     const valid = firstMatches ? !secondMatches : secondMatches
