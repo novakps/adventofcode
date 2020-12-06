@@ -20,7 +20,7 @@ npm run build
 ./lib/index.js --day 5 data/5/test.txt
 ```
 
-### Watch and re-rerun on code change (edit build:live script in package.json)
+### Watch and re-rerun on code change (edit build:live script in package.json to change arguments for day and input file)
 ```
 npm start
 
@@ -40,4 +40,3 @@ Part one valid count: 2
 Part two valid count: 1
 [nodemon] clean exit - waiting for changes before restart
 ```
-
