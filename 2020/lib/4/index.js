@@ -1,24 +1,24 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var fs_1 = require("fs");
-var REQUIRED_FIELDS = ['byr', 'iyr', 'eyr', 'hcl', 'hgt', 'ecl', 'pid'];
-var parse = function (inputFileName) {
-    var data = fs_1.readFileSync(inputFileName).toString();
-    var passports = data.split(/\n\n/).map(function (passport) {
-        var raw_fields = passport.split(/\s/);
-        return raw_fields.reduce(function (accumulator, field) {
-            var _a = field.split(':'), key = _a[0], value = _a[1];
+const fs_1 = require("fs");
+const REQUIRED_FIELDS = ['byr', 'iyr', 'eyr', 'hcl', 'hgt', 'ecl', 'pid'];
+const parse = (inputFileName) => {
+    const data = fs_1.readFileSync(inputFileName).toString();
+    const passports = data.split(/\n\n/).map((passport) => {
+        const raw_fields = passport.split(/\s/);
+        return raw_fields.reduce((accumulator, field) => {
+            const [key, value] = field.split(':');
             accumulator[key] = value;
             return accumulator;
         }, {});
     });
-    var requiredFieldPassports = passports.filter(function (passport) {
-        return REQUIRED_FIELDS.every((function (field_name) {
+    const requiredFieldPassports = passports.filter((passport) => {
+        return REQUIRED_FIELDS.every((field_name => {
             return passport[field_name];
         }));
     });
     console.log('Part1 ', requiredFieldPassports.length);
-    var validPassports = requiredFieldPassports.filter(function (passport) {
+    const validPassports = requiredFieldPassports.filter((passport) => {
         return isValidPassport(passport);
     });
     console.log('Part2 ', validPassports.length);
@@ -33,60 +33,60 @@ var parse = function (inputFileName) {
 //   ecl (Eye Color) - exactly one of: amb blu brn gry grn hzl oth.
 //   pid (Passport ID) - a nine-digit number, including leading zeroes.
 //   cid (Country ID) - ignored, missing or not.
-var RE_FOUR_DIGITS = /^\d{4}$/;
-var RE_HEIGHT = /^(\d+)(cm|in)$/;
-var RE_HAIR_COLOR = /^#[0-9,a-f]{6}$/;
-var RE_EYE_COLOR = /^(amb|blu|brn|gry|grn|hzl|oth)$/;
-var RE_PASSPORT_ID = /^\d{9}$/;
-var isValidPassport = function (passport) {
+const RE_FOUR_DIGITS = /^\d{4}$/;
+const RE_HEIGHT = /^(\d+)(cm|in)$/;
+const RE_HAIR_COLOR = /^#[0-9,a-f]{6}$/;
+const RE_EYE_COLOR = /^(amb|blu|brn|gry|grn|hzl|oth)$/;
+const RE_PASSPORT_ID = /^\d{9}$/;
+const isValidPassport = (passport) => {
     //console.log(passport)
-    var byr = passport.byr, iyr = passport.iyr, eyr = passport.eyr, hcl = passport.hcl, hgt = passport.hgt, ecl = passport.ecl, pid = passport.pid;
+    const { byr, iyr, eyr, hcl, hgt, ecl, pid } = passport;
     //console.log({pid})
     if (validateYear(byr, 1920, 2002) === false) {
-        console.log('failed', { byr: byr });
+        console.log('failed', { byr });
         return false;
     }
     if (validateYear(iyr, 2010, 2020) === false) {
-        console.log('failed', { iyr: iyr });
+        console.log('failed', { iyr });
         return false;
     }
     if (validateYear(eyr, 2020, 2030) === false) {
-        console.log('failed', { eyr: eyr });
+        console.log('failed', { eyr });
         return false;
     }
     if (validateHgt(hgt) === false) {
-        console.log('failed', { hgt: hgt });
+        console.log('failed', { hgt });
         return false;
     }
     if (RE_HAIR_COLOR.test(hcl) === false) {
-        console.log('failed', { hcl: hcl });
+        console.log('failed', { hcl });
         return false;
     }
     if (RE_EYE_COLOR.test(ecl) === false) {
-        console.log('failed', { ecl: ecl });
+        console.log('failed', { ecl });
         return false;
     }
     if (RE_PASSPORT_ID.test(pid) == false) {
-        console.log('failed', { pid: pid });
+        console.log('failed', { pid });
         return false;
     }
     return true;
 };
-var validateYear = function (text, min, max) {
+const validateYear = (text, min, max) => {
     //console.log({text, min, max})
     if (RE_FOUR_DIGITS.test(text) === false) {
         return false;
     }
-    var value = parseInt(text, 10);
+    const value = parseInt(text, 10);
     return (value >= min && value <= max);
 };
-var validateHgt = function (hgt) {
-    var match = hgt.match(RE_HEIGHT);
+const validateHgt = (hgt) => {
+    const match = hgt.match(RE_HEIGHT);
     if (!match) {
         return false;
     }
-    var height = match[1], units = match[2];
-    var value = parseInt(height, 10);
+    const [, height, units] = match;
+    const value = parseInt(height, 10);
     if (units === 'cm') {
         return (value >= 150 && value <= 193);
     }
