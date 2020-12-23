@@ -3,9 +3,13 @@ import { readFileSync } from 'fs'
 export default (inputFileName:string) => {
   const data = readFileSync(inputFileName).toString().trim()
   const waiting_area = seats(data)
-  const count = apply_rounds(waiting_area)
+  let count = apply_rounds(waiting_area)
   console.log('part1: ', {count})
-  //console.log('part2: ', data)
+  neighbors = visibles
+  crowded = five_is_a_crowd
+  changed = true
+  count = apply_rounds(waiting_area)
+  console.log('part2: ', {count})
 }
 
 const seats = (data:string):string[][] => data.split(/\n/).map((line) => line.split(''))
@@ -25,16 +29,14 @@ const occupied_count = (area: string[][]) => {
 }
 
 const apply_round = (waiting_area: string[][]) => {
+  //console.log('\n')
+  //console.log(waiting_area.join('\n'))
   changed = false
   const new_waiting_area = waiting_area.map((row, y) => row.map((type, x) => rules(type, x, y, waiting_area)))
-  if (changed) {
-    changed_count++
-  }
   return new_waiting_area
 }
 
 let changed = true
-let changed_count = 0
 
 const rules = (type: string, x: number, y:number, waiting_area: string[][]) => {
   if ((type === EMPTY_SEAT) && roomy(x, y, waiting_area)) {
@@ -52,13 +54,21 @@ const roomy = (x:number, y:number, waiting_area:string[][]): boolean => {
   return neighbors(x,y,waiting_area).every(type => type !== OCCUPIED_SEAT)
 }
 
-const crowded = (x:number, y:number, waiting_area:string[][]): boolean => {
-  return neighbors(x, y, waiting_area).filter(type => type === OCCUPIED_SEAT).length >= 4
+const is_a_crowd = (x:number, y:number, waiting_area:string[][], max_neighbors:number): boolean => {
+  return neighbors(x, y, waiting_area).filter(type => type === OCCUPIED_SEAT).length >= max_neighbors
+}
+
+const four_is_a_crowd = (x:number, y:number, waiting_area:string[][]): boolean => {
+  return is_a_crowd(x, y, waiting_area, 4)
+}
+
+const five_is_a_crowd = (x:number, y:number, waiting_area:string[][]): boolean => {
+  return is_a_crowd(x, y, waiting_area, 5)
 }
 
 const STEPS = [-1, 0, 1]
 
-const neighbors = (x:number, y:number, waiting_area:string[][]) :string[] => {
+const adjacents = (x:number, y:number, waiting_area:string[][]) :string[] => {
   const result: string[] = []
   STEPS.forEach((row_step) => {
     STEPS.forEach((col_step) => {
@@ -76,6 +86,50 @@ const neighbors = (x:number, y:number, waiting_area:string[][]) :string[] => {
   })
   return result
 }
+
+const DIRECTIONS = [[-1, -1],
+                    [0, -1],
+                    [1, -1],
+                    [-1, 0],
+                    [1, 0],
+                    [-1, 1],
+                    [0, 1],
+                    [1, 1]
+                   ]
+
+const visibles = (x:number, y:number, waiting_area:string[][]) :string[] => {
+  const result:string[] = []
+  DIRECTIONS.forEach(([x_step, y_step]) => {
+    const visible = find_visible(x, y, x_step, y_step, waiting_area)
+    if (visible) {
+      result.push(visible)
+    }
+  })
+  return result
+}
+
+const find_visible = (x:number, y:number, x_step:number, y_step:number, waiting_area:string[][]):(string|undefined) => {
+  const neighbor_x = x + x_step
+  const neighbor_y = y + y_step
+  const neighbor_row = neighbor_y >=0 ? waiting_area[neighbor_y] : undefined
+  if (!neighbor_row) {
+    return undefined
+  }
+  const neighbor = neighbor_x >= 0 ? neighbor_row[neighbor_x]: undefined
+  //console.log({x,y,x_step,y_step, neighbor})
+  if (!neighbor) {
+    return undefined
+  }
+  if (neighbor === FLOOR) {
+    return find_visible(neighbor_x, neighbor_y, x_step, y_step, waiting_area)
+  }
+  return neighbor
+}
+
+let neighbors = adjacents
+
+let crowded = four_is_a_crowd
+
 
 const EMPTY_SEAT = 'L'
 const OCCUPIED_SEAT = '#'
