@@ -3,7 +3,7 @@
   "author": "",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build:live": "nodemon --watch 'src/**/*.ts' --exec \"ts-node\" src/index.ts --day 12 data/12/test.txt",
+    "build:live": "nodemon --watch 'src/**/*.ts' --exec \"ts-node\" src/index.ts --day 13 data/13/test.txt",
     "build": "tsc -p .",
     "dev": "ts-node src/index.ts",
     "start": "npm run build:live"

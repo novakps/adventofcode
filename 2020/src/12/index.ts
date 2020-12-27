@@ -2,12 +2,13 @@ import { readFileSync } from 'fs'
 
 export default (inputFileName:string) => {
   const data = readFileSync(inputFileName).toString().trim()
-  const ship:Ship = {heading: 90, north: 0, east: 0}
-  navigate(ship, instructions(data))
-  //console.log({ship})
-  console.log('part 1: ', manhattan_distance(ship))
-
-
+  const ship_1:Ship = {heading: 90, north: 0, east: 0}
+  navigate_1(ship_1, instructions(data))
+  console.log('part 1: ', manhattan_distance(ship_1))
+  const ship_2:Ship = {heading: 90, north: 0, east: 0}
+  const waypoint:Point = {north: 1, east: 10}
+  navigate_2(ship_2, waypoint, instructions(data))
+  console.log('part 2: ', manhattan_distance(ship_2))
 }
 
 const instructions = (data:string):string[][] => {
@@ -22,13 +23,11 @@ const instructions = (data:string):string[][] => {
   })
 }
 
-type Ship = {
+type Ship = Point & {
   heading: number
-  north: number
-  east: number
 }
 
-type Waypoint = {
+type Point = {
   north: number
   east: number
 }
@@ -41,7 +40,7 @@ BEARING.set('E', 90)
 BEARING.set('S', 180)
 BEARING.set('W', 270)
 
-const navigate = (ship:Ship, instructions:string[][]) => {
+const navigate_1 = (ship:Ship, instructions:string[][]) => {
   instructions.forEach(([action, text_value]) => {
     const value = parseInt(text_value, 10)
     //console.log({action, value, ship})
@@ -73,26 +72,82 @@ const navigate = (ship:Ship, instructions:string[][]) => {
   return ship
 }
 
-const move = (ship:Ship, direction:number, distance:number) => {
+const navigate_2 = (ship:Ship, waypoint:Point, instructions:string[][]) => {
+    instructions.forEach(([action, text_value]) => {
+      const value = parseInt(text_value, 10)
+      console.log({ship, waypoint, action, value})
+      switch (action) {
+      case 'N':
+      case 'S':
+      case 'E':
+      case 'W':
+        const bearing = BEARING.get(action)
+        //console.log({bearing, action})
+        if (bearing !== undefined) {
+          move(waypoint, bearing, value)
+        }
+        break
+      case 'L':
+        rotate(waypoint, (360 - value) % 360)
+        break
+      case 'R':
+        rotate(waypoint, value)
+        break
+      case 'F':
+        move(ship, 90, waypoint.east * value)
+        move(ship, 0, waypoint.north * value)
+        break
+      default:
+        throw `Invalid Action ${action}`
+      }
+    })
+  return ship
+}
+
+const rotate = (point:Point, degrees:number) => {
+  const {east, north} = point
+  console.log('rotate', {point, degrees})
+  switch (degrees) {
+  case 0:
+    break
+  case 90:
+    point.east = north
+    point.north = -east
+    break
+  case 180:
+    point.north = -north
+    point.east = -east
+    break
+  case 270:
+    point.east = -north
+    point.north = east
+    break
+  default:
+    throw `Invalid degrees ${degrees}`
+  }
+  //console.log('rotated', degrees, point)
+}
+
+const move = (point:Point, direction:number, distance:number) => {
   //console.log('move', {direction, distance})
   switch (direction) {
   case 0:
-    ship.north = ship.north + distance
+    point.north = point.north + distance
     break
   case 90:
-    ship.east = ship.east + distance
+    point.east = point.east + distance
     break
   case 180:
-    ship.north = ship.north - distance
+    point.north = point.north - distance
     break
   case 270:
-    ship.east = ship.east - distance
+    point.east = point.east - distance
     break
   default:
     throw `Invalid Direction ${direction}`
   }
 }
 
-const manhattan_distance = (ship:Ship):number => {
-  return Math.abs(ship.north) + Math.abs(ship.east)
+const manhattan_distance = (point:Point):number => {
+  return Math.abs(point.north) + Math.abs(point.east)
 }
