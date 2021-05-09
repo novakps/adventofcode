@@ -6,6 +6,6 @@ fileinput:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/fileinput/-/fileinput-0.2.0.tgz#03cc215626238e95e1e86890e24a57db400a4e16"
 
-lodash@^4.17.19:
-  version "4.17.19"
-  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.19.tgz#e48ddedbe30b3321783c5b4301fbd353bc1e4a4b"
+lodash@^4.17.21:
+  version "4.17.21"
+  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.21.tgz#679591c564c3bffaae8454cf0b3df370c3d6911c"
