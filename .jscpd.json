@@ -1,0 +1,40 @@
+{
+  "gitignore": true,
+  "reporters": ["console"],
+  "pattern": "**/*.{java,py,js,jsx,ts,tsx}",
+  "ignore": [
+    "**/*.bin",
+    "**/*.html",
+    "**/*.jpg",
+    "**/*.json",
+    "**/*.md",
+    "**/*.png",
+    "**/*.svg",
+    "**/*.xml",
+    "**/*.yaml",
+    "**/*.yml",
+    "**/*.zip",
+    "**/*cache*/**",
+    "**/.git/**",
+    "**/.rbenv/**",
+    "**/.venv*/**",
+    "**/SEURAT-InfoVis/test-scripts/systemtest/bb.sikuli/lib/xlrd/**",
+    "**/SEURAT-InfoVis/test-scripts/systemtest/bb.sikuli/lib/xlwt/**",
+    "**/build/**",
+    "**/closure-library/**",
+    "**/coverage/**",
+    "**/dev/lib/**",
+    "**/dist/**",
+    "**/node_modules/**",
+    "**/report/**",
+    "**/site-packages/**",
+    "**/target/**",
+    "**/vendor/**",
+    "**/venv/**"
+  ],
+  "ignorePattern": [
+    "import .*;",
+    "import .* from '.*';",
+    "import {.*} from '.*';"
+  ]
+}

@@ -43,3 +43,4 @@ jobs:
           # Required to provide a baseline for git diffing
           DEFAULT_BRANCH: master
           VALIDATE_JSCPD: true
+          JSCPD_CONFIG_FILE: .jscpd.json
