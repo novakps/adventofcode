@@ -1,9 +1,9 @@
 ---
 name: Lint
 
-on: # yamllint disable-line rule:truthy
-  push: null
-  pull_request: null
+on:
+  pull_request:
+    types: [opened, edited, synchronize]
 
 permissions: {}
 
@@ -38,3 +38,9 @@ jobs:
         env:
           # To report GitHub Actions status checks
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # changed files only
+          VALIDATE_ALL_CODEBASE: false
+          # Required to provide a baseline for git diffing
+          DEFAULT_BRANCH: master
+          VALIDATE_JSCPD: true
+          JSCPD_CONFIG_FILE: .jscpd.json
